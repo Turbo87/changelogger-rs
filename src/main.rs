@@ -2,8 +2,9 @@ use std::env;
 
 use clap::{App, Arg};
 use clap::{crate_name, crate_version, crate_description};
+use failure::Error;
 
-fn main() -> std::io::Result<()> {
+fn main() -> Result<(), Error> {
     let path = env::current_dir()?.into_os_string();
 
     let matches = App::new(crate_name!())
