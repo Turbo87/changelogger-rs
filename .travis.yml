@@ -21,13 +21,13 @@ script:
 jobs:
   include:
     - name: rustfmt
-      rust: 1.31.1
+      rust: 1.31.0
 
       script:
         - cargo fmt -- --check
 
     - name: clippy
-      rust: nightly
+      rust: 1.31.0
 
       install:
         - cargo install clippy
