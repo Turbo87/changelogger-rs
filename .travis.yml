@@ -23,6 +23,9 @@ jobs:
     - name: rustfmt
       rust: 1.31.0
 
+      install:
+        - rustup component add rustfmt
+
       script:
         - cargo fmt -- --check
 
