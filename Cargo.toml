@@ -5,3 +5,4 @@ authors = ["Tobias Bieniek <tobias.bieniek@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+git2 = "0.8.0"
