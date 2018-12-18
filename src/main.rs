@@ -5,6 +5,7 @@ use std::process;
 use clap::{App, Arg};
 use clap::{crate_name, crate_version, crate_description};
 use failure::Error;
+use git2::Repository;
 
 fn main() -> Result<(), Error> {
     let path = env::current_dir()?.into_os_string();
@@ -36,7 +37,8 @@ fn main() -> Result<(), Error> {
         process::exit(1);
     }
 
-    println!("PATH: {:?}", path);
+    let repo = Repository::open(path)?;
+    println!("PATH: {:?}", repo.path());
 
     Ok(())
 }
