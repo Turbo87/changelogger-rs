@@ -16,6 +16,14 @@ fn main() -> Result<(), Error> {
             .help("path of a git repository")
             .index(1)
             .default_value_os(path.as_os_str()))
+        .arg(Arg::with_name("FROM")
+            .long("from")
+            .takes_value(true)
+            .required(true))
+        .arg(Arg::with_name("TO")
+            .long("to")
+            .takes_value(true)
+            .required(true))
         .get_matches();
 
     let path = Path::new(matches.value_of("PATH").unwrap());
