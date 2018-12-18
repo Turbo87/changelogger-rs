@@ -4,10 +4,17 @@ use std::process;
 
 use clap::{App, Arg};
 use clap::{crate_name, crate_version, crate_description};
-use failure::Error;
+use failure::{Error, format_err};
 use git2::Repository;
 
-fn main() -> Result<(), Error> {
+fn main() {
+    if let Err(err) = run_app() {
+        eprintln!("error: {}", err);
+        process::exit(1);
+    }
+}
+
+fn run_app() -> Result<(), Error> {
     let path = env::current_dir()?.into_os_string();
 
     let matches = App::new(crate_name!())
@@ -29,15 +36,15 @@ fn main() -> Result<(), Error> {
 
     let path = Path::new(matches.value_of("PATH").unwrap());
     if !path.exists() {
-        println!("Path {:?} does not exist!", path);
-        process::exit(1);
+        return Err(format_err!("path '{}' does not exist", path.to_string_lossy()));
     }
     if !path.is_dir() {
-        println!("Path {:?} is not a directory!", path);
-        process::exit(1);
+        return Err(format_err!("path '{}' is not a directory", path.to_string_lossy()));
     }
 
-    let repo = Repository::open(path)?;
+    let repo = Repository::open(path)
+        .map_err(|err| format_err!("{}", err.message()))?;
+
     println!("PATH: {:?}", repo.path());
 
     Ok(())
