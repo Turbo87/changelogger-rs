@@ -1,0 +1,6 @@
+[package]
+name = "changelogger"
+version = "0.0.0"
+authors = ["Tobias Bieniek <tobias.bieniek@gmail.com>"]
+
+[dependencies]
