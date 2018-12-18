@@ -5,7 +5,7 @@ use std::process;
 use clap::{App, Arg};
 use clap::{crate_name, crate_version, crate_description};
 use failure::{Error, format_err};
-use git2::Repository;
+use git2::{Repository, Sort};
 
 fn main() {
     if let Err(err) = run_app() {
@@ -45,7 +45,19 @@ fn run_app() -> Result<(), Error> {
     let repo = Repository::open(path)
         .map_err(|err| format_err!("{}", err.message()))?;
 
-    println!("PATH: {:?}", repo.path());
+    let from = repo.revparse_single(matches.value_of("FROM").unwrap())?.id();
+    let to = repo.revparse_single(matches.value_of("TO").unwrap())?.id();
+
+    let mut revwalk = repo.revwalk()?;
+    revwalk.set_sorting(Sort::TOPOLOGICAL | Sort::REVERSE);
+    revwalk.hide(from)?;
+    revwalk.push(to)?;
+
+    for result in revwalk {
+        let oid = result?;
+        let commit = repo.find_commit(oid)?;
+        println!("{}\n", commit.message().unwrap().trim());
+    }
 
     Ok(())
 }
